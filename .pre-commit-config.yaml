@@ -1,44 +1,63 @@
+# See https://pre-commit.com for more information
+#default_language_version:
+  # default language version for each language used in the repository
+#  python: python3.9
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: debug-statements
-    -   id: double-quote-string-fixer
-    -   id: name-tests-test
-    -   id: requirements-txt-fixer
--   repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.5.0
+      # See https://pre-commit.com/hooks.html for more hooks
+      - id: check-ast
+      - id: check-case-conflict
+      # - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: name-tests-test
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-json
+      - id: pretty-format-json
+        args: ["--autofix", "--no-sort-keys"]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.4
     hooks:
-    -   id: setup-cfg-fmt
--   repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.12.0
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: 22.12.0
     hooks:
-    -   id: reorder-python-imports
-        exclude: ^(pre_commit/resources/|testing/resources/python3_hooks_repo/)
-        args: [--py39-plus, --add-import, 'from __future__ import annotations']
--   repo: https://github.com/asottile/add-trailing-comma
-    rev: v3.1.0
+      - id: black
+        args:
+          - --line-length=100
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.4
     hooks:
-    -   id: add-trailing-comma
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
+      - id: bandit
+        args: [ "-iii", "-ll" ]
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
     hooks:
-    -   id: pyupgrade
-        args: [--py39-plus]
--   repo: https://github.com/hhatto/autopep8
-    rev: v2.0.4
+      - id: flake8
+        additional_dependencies: [
+            "flake8-bugbear",
+            "flake8-comprehensions",
+            "flake8-mutable",
+            "flake8-print",
+            "flake8-simplify",
+        ]
+        args:
+          - --max-line-length=250
+  - repo: https://github.com/PabloRMira/sql_formatter
+    rev: 0.6.2
     hooks:
-    -   id: autopep8
--   repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
+    - id: sql_formatter
+  - repo: local
     hooks:
-    -   id: flake8
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-    -   id: mypy
-        additional_dependencies: [types-all]
-        exclude: ^testing/resources/
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          - --max-line-length=250
+          - --max-args=10
